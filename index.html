@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的交互式页面</title>
+    
+    <style>
+        /* --- 基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5; /* 页面的背景色 */
+            margin: 0;
+            padding: 20px; /* 页面边缘留出一些空间 */
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            min-height: 100vh;
+        }
+
+        /* --- 主要容器 --- */
+        .container {
+            width: 100%;
+            max-width: 800px; /* 限制最大宽度，在大屏幕上更好看 */
+        }
+
+        /* --- 1. 顶部的标题格子 --- */
+        .header-box {
+            background-color: #007bff; /* 蓝色背景 */
+            color: white; /* 白色文字 */
+            padding: 25px 30px; /* 内边距，让文字不贴边 */
+            text-align: center; /* 文字居中 */
+            border-radius: 12px; /* 圆角效果 */
+            margin-bottom: 25px; /* 和下面的格子拉开距离 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 添加一点阴影，更有立体感 */
+        }
+
+        .header-box h1 {
+            margin: 0; /* 去掉标题默认的外边距 */
+            font-size: 2em; /* 标题字号大一点 */
+        }
+
+        /* --- 2. 中间的交互小格子容器 --- */
+        .grid-container {
+            display: grid; /* 使用网格布局！这是创建格子的关键 */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 响应式网格：每行尽可能多地放格子，每个格子最小180px */
+            gap: 20px; /* 格子之间的间距 */
+        }
+
+        /* --- 3. 单个交互小格子的样式 --- */
+        .interactive-box {
+            background-color: #ffffff; /* 白色背景 */
+            padding: 20px;
+            border-radius: 12px; /* 圆角 */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* 更细微的阴影 */
+            text-align: center;
+            cursor: pointer; /* 鼠标悬停时显示为小手形状，提示可以点击 */
+            transition: all 0.3s ease; /* 添加过渡效果，让交互更平滑 */
+        }
+        
+        /* --- 4. 交互效果：鼠标悬停时 --- */
+        .interactive-box:hover {
+            transform: translateY(-8px); /* 向上移动一点 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* 阴影变深，产生“浮起来”的效果 */
+            background-color: #eef8ff; /* 背景色也稍微变一下 */
+        }
+
+        .interactive-box h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .interactive-box p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .grid-link {
+            text-decoration: none; /* 去掉链接的下划线 */
+            color: inherit;        /* 让链接继承父元素的颜色（而不是默认的蓝色） */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-box">
+            <h1>综测计算器</h1>
+        </header>
+
+        <main class="grid-container">
+            <a href="zju.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>浙大</h3>
+                    <p>浙江大学</p>
+                </div>
+            </a>
+
+            <a href="sust.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>南科大</h3>
+                    <p>南方科技大学</p>
+                </div>
+            </a>
+            
+            <a href="sysu.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>中大</h3>
+                    <p>中山大学</p>
+                </div>
+            </a>
+
+            <a href="scut.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>华工</h3>
+                    <p>华南理工大学</p>
+                </div>
+            </a>
+
+            <a href="bfsu.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>北外</h3>
+                    <p>北京外国语大学</p>
+                </div>
+            </a>
+
+            <a href="cuhk(sz).html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>港中深</h3>
+                    <p>香港中文大学（深圳）</p>
+                </div>
+            </a>
+
+            <a href="xjtlu.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>西浦</h3>
+                    <p>西交利物浦大学</p>
+                </div>
+            </a>
+
+            <a href="msu-bit.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>深北莫</h3>
+                    <p>深圳北理莫斯科大学</p>
+                </div>
+            </a>
+
+            <a href="uic.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>北师浸会</h3>
+                    <p>北京师范大学-香港浸会大学联合国际学院</p>
+                </div>
+            </a>
+
+            <a href="xhu.html" class="grid-link">
+                <div class="interactive-box">
+                    <h3>西湖大学</h3>
+                </div>
+            </a>
+
+        </main>
+    </div>
+</body>
+</html>
