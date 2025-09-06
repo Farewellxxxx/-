@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北京外国语大学 - 综合评价计算器</title>
+
+    <style>
+        /* --- 页面基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- 计算器容器样式 --- */
+        .calculator-container {
+            background-color: white;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #A51C30; /* BFSU Red */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* --- 计算方式介绍区域 --- */
+        .description-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #495057;
+            line-height: 1.5;
+        }
+        .description-box strong {
+            color: #000;
+        }
+
+        /* --- "格子对" 的行样式 --- */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-row label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .input-row input {
+            width: 130px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: right;
+        }
+
+        /* --- 计算按钮样式 --- */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #A51C30; /* BFSU Red */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #calculate-btn:hover {
+            background-color: #841626;
+        }
+
+        /* --- 结果显示区域样式 --- */
+        .result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #A51C30; /* BFSU Red */
+        }
+
+        /* --- 返回主页链接的样式 --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>北京外国语大学综合评价计算器</h1>
+
+        <div class="description-box">
+            <p><strong>计算方式：</strong>综合评价成绩 = 高考成绩(实考分) (70%) + 能力测试成绩 × (当地高考满分值/50) (30%)</p>
+        </div>
+
+        <div class="input-row">
+            <label for="gaokaoScore">高考成绩 (实考分)</label>
+            <input type="number" id="gaokaoScore" placeholder="请输入分数">
+        </div>
+
+        <div class="input-row">
+            <label for="abilityTestScore">能力测试成绩</label>
+            <input type="number" id="abilityTestScore" placeholder="满分50">
+        </div>
+
+        <div class="input-row">
+            <label for="gaokaoTotal">当地高考满分值</label>
+            <input type="number" id="gaokaoTotal" value="750">
+        </div>
+
+        <button id="calculate-btn">计算总分</button>
+
+        <div class="result-area">
+            <span>综合评价成绩: </span>
+            <span id="total-score">0.00</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">返回主页</a>
+
+    <script>
+        // --- 1. 获取所有需要操作的HTML元素 ---
+        const gaokaoScoreInput = document.getElementById('gaokaoScore');
+        const abilityTestScoreInput = document.getElementById('abilityTestScore');
+        const gaokaoTotalInput = document.getElementById('gaokaoTotal');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const totalScoreSpan = document.getElementById('total-score');
+
+        // --- 2. 给“计算按钮”添加一个点击事件监听 ---
+        calculateBtn.addEventListener('click', function() {
+            // --- 3. 在点击时执行计算 ---
+            
+            // a. 从输入框获取所有需要的值
+            const userGaokaoScore = parseFloat(gaokaoScoreInput.value) || 0;
+            const abilityTestScore = parseFloat(abilityTestScoreInput.value) || 0;
+            const gaokaoTotal = parseFloat(gaokaoTotalInput.value) || 750;
+
+            // b. 计算高考成绩部分的贡献 (70%)
+            // 注意：这里直接使用实考分，不需要折算
+            const gaokaoPart = userGaokaoScore * 0.70;
+
+            // c. 计算能力测试部分的贡献 (30%)
+            // 这就是我们之前讨论的，包含“换算系数”的算法
+            const abilityTestPart = abilityTestScore * (gaokaoTotal / 50) * 0.30;
+
+            // d. 两部分相加得出最终成绩
+            const finalScore = gaokaoPart + abilityTestPart;
+
+            // e. 将计算结果更新到页面的显示区域
+            totalScoreSpan.textContent = finalScore.toFixed(2);
+        });
+    </script>
+</body>
+</html>

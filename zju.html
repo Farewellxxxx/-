@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浙江大学 - 综测计算器</title>
+
+    <style>
+        /* --- 页面基础样式 (与之前保持一致) --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- 计算器容器样式 (与之前保持一致) --- */
+        .calculator-container {
+            background-color: white;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #005CBF;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* --- 新增：计算方式介绍区域 (与之前保持一致) --- */
+        .description-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        .description-box p {
+            margin: 5px 0;
+        }
+        .description-box strong {
+            color: #000;
+        }
+
+        /* --- "格子对" 的行样式 (与之前保持一致) --- */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-row label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .input-row input {
+            width: 130px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: right;
+        }
+
+        /* --- 计算按钮样式 (与之前保持一致) --- */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #005CBF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #calculate-btn:hover {
+            background-color: #004997;
+        }
+
+        /* --- 结果显示区域样式 (与之前保持一致) --- */
+        .result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #005CBF;
+        }
+
+        /* --- 返回主页链接的样式 (与之前保持一致) --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>浙江大学</h1>
+
+        <div class="description-box">
+            <p><strong>选科要求：</strong>物化</p>
+            <p><strong>计算方式：</strong>综合成绩 = 高考成绩（折算成百分制）(85%) + 综合面试成绩 (15%)</p>
+        </div>
+
+        <div class="input-row">
+            <label for="gaokaoScore">高考实际分数</label>
+            <input type="number" id="gaokaoScore" placeholder="请输入分数">
+        </div>
+
+        <div class="input-row">
+            <label for="interviewScore">综合面试成绩</label>
+            <input type="number" id="interviewScore" placeholder="请输入分数">
+        </div>
+
+        <button id="calculate-btn">计算总分</button>
+
+        <div class="result-area">
+            <span>综合成绩: </span>
+            <span id="total-score">0.00</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">返回主页</a>
+
+    <script>
+        // --- 1. 获取需要操作的HTML元素 ---
+        const gaokaoScoreInput = document.getElementById('gaokaoScore');
+        const interviewScoreInput = document.getElementById('interviewScore');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const totalScoreSpan = document.getElementById('total-score');
+
+        // --- 2. 给“计算按钮”添加一个点击事件监听 ---
+        calculateBtn.addEventListener('click', function() {
+            // --- 3. 在点击时执行计算 ---
+            
+            // 从输入框获取值，并用parseFloat转换为数字。
+            const userGaokaoScore = parseFloat(gaokaoScoreInput.value) || 0;
+            const interviewScore = parseFloat(interviewScoreInput.value) || 0;
+            
+            // 高考满分固定为750
+            const totalGaokaoScore = 750;
+
+            // 核心算法步骤1: 将高考成绩折算成100分制
+            const scaledGaokaoScore = (userGaokaoScore / totalGaokaoScore) * 100;
+
+            // 核心算法步骤2: 根据ZJU的85/15权重计算最终总分
+            const finalScore = (scaledGaokaoScore * 0.85) + (interviewScore * 0.15);
+
+            // 将计算结果更新到页面的显示区域，并保留两位小数
+            totalScoreSpan.textContent = finalScore.toFixed(2);
+        });
+    </script>
+</body>
+</html>

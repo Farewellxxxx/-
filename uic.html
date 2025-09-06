@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北师港浸大 - 综合评价计算器</title>
+
+    <style>
+        /* --- 页面基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- 计算器容器样式 --- */
+        .calculator-container {
+            background-color: white;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #005A94; /* UIC Blue */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* --- 计算方式介绍区域 --- */
+        .description-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #495057;
+            line-height: 1.5;
+        }
+        .description-box p { margin: 5px 0; }
+        .description-box strong { color: #000; }
+
+        /* --- "格子对" 的行样式 --- */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-row label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .input-row input {
+            width: 130px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: right;
+        }
+
+        /* --- 学考等级选择区域的样式 --- */
+        .grades-label {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+            display: block;
+        }
+        /* 新增：用于说明学考计算方式的小字样式 */
+        .grades-note {
+            font-size: 0.9em;      /* 设置小一点的字号 */
+            color: #6c757d;       /* 使用柔和的灰色字体 */
+            margin-top: -10px;     /* 向上移动，靠近主标题 */
+            margin-bottom: 20px;   /* 与下方的格子保持适当距离 */
+            text-align: left;      /* 确保文本左对齐 */
+        }
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .grade-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .grade-item label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .grade-item select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* --- 计算按钮样式 --- */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #005A94; /* UIC Blue */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #calculate-btn:hover { background-color: #004B7C; }
+
+        /* --- 结果显示区域样式 --- */
+        .result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #005A94; /* UIC Blue */
+        }
+
+        /* --- 返回主页链接的样式 --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>北师港浸大综合评价计算器</h1>
+
+        <div class="description-box">
+            <p><strong>计算方式：</strong>综合成绩(满分750) = 高考成绩×60% + 入学测试成绩 + 高中学业水平考试成绩</p>
+        </div>
+
+        <div class="input-row">
+            <label for="gaokaoScore">高考成绩 (含加分)</label>
+            <input type="number" id="gaokaoScore" placeholder="请输入分数">
+        </div>
+
+        <div class="input-row">
+            <label for="entranceTestScore">入学测试成绩</label>
+            <input type="number" id="entranceTestScore" placeholder="满分225">
+        </div>
+
+        <label class="grades-label">高中学业水平考试成绩（满分75）</label>
+        <p class="grades-note">计分规则：A=75分, B=64分, C=41分, D=19分</p>
+        <div class="grades-grid">
+            <div class="grade-item">
+                <label for="sub1">物理</label>
+                <select id="sub1" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub2">化学</label>
+                <select id="sub2" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub3">生物</label>
+                <select id="sub3" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub4">政治</label>
+                <select id="sub4" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub5">历史</label>
+                <select id="sub5" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub6">地理</label>
+                <select id="sub6" class="grade-selector">
+                    <option value="A">A (75分)</option><option value="B">B (64分)</option><option value="C">C (41分)</option><option value="D">D (19分)</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="calculate-btn">计算总分</button>
+
+        <div class="result-area">
+            <span>综合成绩 (750分制): </span>
+            <span id="total-score">0.00</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">返回主页</a>
+
+    <script>
+        // --- 1. 获取所有需要操作的HTML元素 ---
+        const gaokaoScoreInput = document.getElementById('gaokaoScore');
+        const entranceTestScoreInput = document.getElementById('entranceTestScore');
+        const gradeSelectors = document.querySelectorAll('.grade-selector');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const totalScoreSpan = document.getElementById('total-score');
+
+        // 定义等级到分数的映射
+        const gradeToPoints = { 'A': 75, 'B': 64, 'C': 41, 'D': 19 };
+
+        // --- 2. 给“计算按钮”添加一个点击事件监听 ---
+        calculateBtn.addEventListener('click', function() {
+            // --- 3. 在点击时执行计算 ---
+            
+            // a. 计算高考成绩部分
+            const userGaokaoScore = parseFloat(gaokaoScoreInput.value) || 0;
+            const gaokaoComponent = userGaokaoScore * 0.60;
+
+            // b. 获取入学测试成绩部分
+            const entranceTestComponent = parseFloat(entranceTestScoreInput.value) || 0;
+
+            // c. 计算学业水平考试成绩部分
+            let totalGradePoints = 0;
+            gradeSelectors.forEach(selector => {
+                const selectedGrade = selector.value;
+                totalGradePoints += gradeToPoints[selectedGrade];
+            });
+            const academicTestComponent = totalGradePoints / 6;
+
+            // d. 三部分直接相加
+            const finalScore = gaokaoComponent + entranceTestComponent + academicTestComponent;
+
+            // e. 将计算结果更新到页面
+            totalScoreSpan.textContent = finalScore.toFixed(2);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>西湖大学 - 综测计算器</title>
+
+    <style>
+        /* --- 页面基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- 计算器容器样式 --- */
+        .calculator-container {
+            background-color: white;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #006DB6; /* Westlake University Blue */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* --- 计算方式介绍区域 --- */
+        .description-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        .description-box p {
+            margin: 5px 0;
+        }
+        .description-box strong {
+            color: #000;
+        }
+
+        /* --- "格子对" 的行样式 --- */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-row label {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .input-row input {
+            width: 130px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: right;
+        }
+        
+        /* --- 新增：用于显示固定分数的样式 --- */
+        .fixed-score {
+            width: 130px;
+            padding: 10px;
+            font-size: 1.1em;
+            text-align: right;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* --- 计算按钮样式 --- */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #006DB6; /* Westlake University Blue */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #calculate-btn:hover {
+            background-color: #005A94;
+        }
+
+        /* --- 结果显示区域样式 --- */
+        .result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #006DB6; /* Westlake University Blue */
+        }
+
+        /* --- 返回主页链接的样式 --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>西湖大学创新班综评计算器</h1>
+
+        <div class="description-box">
+            <p><strong>选科要求：</strong>物化</p>
+            <p><strong>计算方式：</strong>综合总分 =高考总分（折算成百分制）(60%) + 学校综合测试 (30%) + 学业水平考试 (10%)</p>
+        </div>
+
+        <div class="input-row">
+            <label for="gaokaoScore">高考总分</label>
+            <input type="number" id="gaokaoScore" placeholder="请输入分数">
+        </div>
+
+        <div class="input-row">
+            <label for="schoolTestScore">学校综合测试成绩</label>
+            <input type="number" id="schoolTestScore" placeholder="满分100">
+        </div>
+
+        <div class="input-row">
+            <label>学业水平考试成绩</label>
+            <span class="fixed-score">100 (满分)</span>
+        </div>
+
+        <button id="calculate-btn">计算总分</button>
+
+        <div class="result-area">
+            <span>综合总分: </span>
+            <span id="total-score">0.00</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">返回主页</a>
+
+    <script>
+        // --- 1. 获取需要操作的HTML元素 ---
+        const gaokaoScoreInput = document.getElementById('gaokaoScore');
+        const schoolTestScoreInput = document.getElementById('schoolTestScore');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const totalScoreSpan = document.getElementById('total-score');
+
+        // --- 2. 给“计算按钮”添加一个点击事件监听 ---
+        calculateBtn.addEventListener('click', function() {
+            // --- 3. 在点击时执行计算 ---
+            
+            // 从输入框获取值
+            const userGaokaoScore = parseFloat(gaokaoScoreInput.value) || 0;
+            const schoolTestScore = parseFloat(schoolTestScoreInput.value) || 0;
+            
+            // 根据规则定义固定值
+            const totalGaokaoScore = 750;
+            const academicTestScore = 100; // 学业水平考试成绩固定为100分
+
+            // 核心算法步骤1: 将高考成绩折算成100分制
+            const scaledGaokaoScore = (userGaokaoScore / totalGaokaoScore) * 100;
+
+            // 核心算法步骤2: 根据西湖大学的60/30/10权重计算最终总分
+            const finalScore = (scaledGaokaoScore * 0.6) + (schoolTestScore * 0.3) + (academicTestScore * 0.1);
+
+            // 将计算结果更新到页面的显示区域，并保留两位小数
+            totalScoreSpan.textContent = finalScore.toFixed(2);
+        });
+    </script>
+</body>
+</html>

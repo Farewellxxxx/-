@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南方科技大学 - 综测计算器</title>
+
+    <style>
+        /* --- 页面基础样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* --- 计算器容器样式 --- */
+        .calculator-container {
+            background-color: white;
+            padding: 30px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px; /* 稍微加宽以容纳更复杂的内容 */
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0055A2; /* SUSTech Blue */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        /* --- 计算方式介绍区域 --- */
+        .description-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+        .description-box p { margin: 5px 0; }
+        .description-box strong { color: #000; }
+
+        /* --- 新增：区域小标题 --- */
+        .section-title {
+            font-size: 1.2em;
+            color: #333;
+            border-bottom: 2px solid #0055A2;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        /* --- "格子对" 的行样式 --- */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .input-row label {
+            font-size: 1em; /* 调整字号适应更多行 */
+            color: #555;
+            flex-shrink: 0; /* 防止label被压缩 */
+            margin-right: 15px;
+        }
+
+        .input-row input {
+            width: 130px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: right;
+        }
+        
+        /* --- 新增：学考等级选择区域 --- */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 一行三列的网格 */
+            gap: 15px; /* 网格间距 */
+        }
+        .grade-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .grade-item label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        .grade-item select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* --- 计算按钮样式 --- */
+        #calculate-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #0055A2; /* SUSTech Blue */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        
+        #calculate-btn:hover { background-color: #004482; }
+
+        /* --- 结果显示区域样式 --- */
+        .result-area {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #0055A2; /* SUSTech Blue */
+        }
+
+        /* --- 返回主页链接的样式 --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-link:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>南方科技大学综合评价计算器</h1>
+
+        <div class="description-box">
+            <p><strong>选科要求：</strong>物化</p>
+            <p><strong>计算方式：</strong>高考（折算成百分制）(60%) + 能力测试(30%) + 高中平时成绩(10%)</p>
+        </div>
+
+        <h2 class="section-title">高考成绩 (60%)</h2>
+        <div class="input-row">
+            <label for="gaokaoScore">高考总分</label>
+            <input type="number" id="gaokaoScore" placeholder="请输入分数">
+        </div>
+
+        <h2 class="section-title">能力测试成绩 (30%)</h2>
+        <div class="input-row">
+            <label for="machineTestScore">机试成绩 (满分100)</label>
+            <input type="number" id="machineTestScore" placeholder="计入25%">
+        </div>
+        <div class="input-row">
+            <label for="interviewScore">面试成绩 (满分100)</label>
+            <input type="number" id="interviewScore" placeholder="计入5%">
+        </div>
+        
+        <h2 class="section-title">高中平时成绩 (10%)</h2>
+        <div class="input-row">
+            <label for="qualityScore">综合素质评价 (满分100)</label>
+            <input type="number" id="qualityScore" placeholder="计入3%">
+        </div>
+        
+        <label>高中学业水平考试 (计入7%)</label>
+        <div class="grades-grid">
+            <div class="grade-item">
+                <label for="sub1">物理</label>
+                <select id="sub1" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub2">化学</label>
+                <select id="sub2" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub3">生物</label>
+                <select id="sub3" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub4">历史</label>
+                <select id="sub4" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub5">政治</label>
+                <select id="sub5" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+            <div class="grade-item">
+                <label for="sub6">地理</label>
+                <select id="sub6" class="grade-selector">
+                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="calculate-btn">计算总分</button>
+
+        <div class="result-area">
+            <span>综合成绩: </span>
+            <span id="total-score">0.00</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">返回主页</a>
+
+    <script>
+        // --- 1. 获取所有需要操作的HTML元素 ---
+        const gaokaoScoreInput = document.getElementById('gaokaoScore');
+        const machineTestScoreInput = document.getElementById('machineTestScore');
+        const interviewScoreInput = document.getElementById('interviewScore');
+        const qualityScoreInput = document.getElementById('qualityScore');
+        const gradeSelectors = document.querySelectorAll('.grade-selector'); // 获取所有6个等级选择器
+        const calculateBtn = document.getElementById('calculate-btn');
+        const totalScoreSpan = document.getElementById('total-score');
+
+        // 定义等级到分数的映射
+        const gradeToPoints = { 'A': 7, 'B': 6.5, 'C': 6, 'D': 5.5 };
+
+        // --- 2. 给“计算按钮”添加点击事件监听 ---
+        calculateBtn.addEventListener('click', function() {
+            // --- 3. 在点击时执行复杂的计算 ---
+            
+            // a. 获取所有输入框的值
+            const userGaokaoScore = parseFloat(gaokaoScoreInput.value) || 0;
+            const machineTestScore = parseFloat(machineTestScoreInput.value) || 0;
+            const interviewScore = parseFloat(interviewScoreInput.value) || 0;
+            const qualityScore = parseFloat(qualityScoreInput.value) || 0;
+            
+            // b. 计算学业水平考试的平均分
+            let totalGradePoints = 0;
+            gradeSelectors.forEach(selector => {
+                const selectedGrade = selector.value; // 获取选中的等级，如 'A'
+                totalGradePoints += gradeToPoints[selectedGrade]; // 根据等级从映射中找到分数并累加
+            });
+            const avgGradeScore = totalGradePoints / 6; // 计算6科的平均分 (满分7分)
+
+            // c. 根据南科大的权重计算最终总分
+            // 60% 高考
+            const gaokaoPart = ((userGaokaoScore / 750) * 100) * 0.6;
+            // 30% 能力测试 (25%机试 + 5%面试)
+            const abilityTestPart = (machineTestScore * 0.25) + (interviewScore * 0.05);
+            // 10% 高中平时成绩 (3%综合素质 + 7%学业水平考试)
+            const highSchoolPart = (qualityScore * 0.03) + ((avgGradeScore / 7) * 100) * 0.07;
+            
+            const finalScore = gaokaoPart + abilityTestPart + highSchoolPart;
+
+            // d. 将计算结果更新到页面
+            totalScoreSpan.textContent = finalScore.toFixed(2);
+        });
+    </script>
+</body>
+</html>
